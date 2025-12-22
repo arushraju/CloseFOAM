@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloseFOAM</title>
+    <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+    
+    <!--Type Animation-->
+    <div class="heading">
+        <p>
+            Hello Friends!<br> Welcome to the documentation of <span class="c closefoam">C</span><span class="l closefoam">l</span><span class="o closefoam">o</span><span class="s closefoam">s</span><span class="e closefoam">e</span><span class="f closefoam">F</span><span class="o closefoam">O</span><span class="a closefoam">A</span><span class="m closefoam">M</span>
+    </div>
+
+    <div class="navigator">
+        <div id="scroll-motivation" class="navigator-item"><p>Motivation</p></div>
+        <div id="scroll-algorithm" class="navigator-item"><p>Algorithm</p></div>
+        <div id="scroll-usage-manual" class="navigator-item"><p>Usage Manual</p></div>
+    </div>
+
+    <!--White back ground-->
+    <div class="white-background">
+        <div class="content-heading motivation">
+            Motivation
+        </div>
+        <div class="content">
+            <p>
+                This webpage is where I talk about a project I call closeFOAM. As you might have already guessed, the name is inspired by the well-known software OpenFOAM.
+            </p>
+            <p>
+                Just like OpenFOAM, this solver runs entirely in the terminal and doesn’t have a graphical user interface (GUI) for the user to interact with. Everything happens through the command line.
+            </p>
+            <p>
+                Of course, there is a huge difference between OpenFOAM and closeFOAM in terms of reliability, credibility, and accuracy — OpenFOAM is an industry-level tool, while closeFOAM is a personal project made mainly for learning and experimentation.
+            </p>
+            <p>
+                Apart from these obvious differences, closeFOAM also differs from OpenFOAM in one more important way: how it takes input from the user. The input method used in closeFOAM is simpler and more direct, making it easier to understand what’s going on behind the scenes, especially for someone who is just starting out.
+            </p>
+            <p>
+                I had this idea of using an image-based input pipeline that could be fed directly into the solver. The main motivation behind this was to make things easier for users who have little to no experience with CAD software, but still want to experiment with fluid simulations. In a typical CFD workflow, you first create a geometry and generate a mesh from it. Only after that do you actually start the simulation. During the simulation, different numerical methods (one of which could be the finite difference method) are used to solve the governing equations, along with the boundary conditions that come from the mesh you created. Finally, the results are generated and then analyzed. With this approach, I wanted to simplify that initial setup phase by skipping the traditional step of creating the geometry and mesh using CAD software altogether, and instead move straight into the simulation using a more direct input method.
+            </p>
+            <p>
+                I completed my first course in Computational Fluid Mechanics in my sixth semester, and that’s where I learned about the finite difference method. By the end of the course, I was introduced to the <span class="important-content">Marker and Cell (MAC) scheme</span>, which is a way of discretizing the grid using a staggered grid layout. This approach helps deal with the coupling between the continuity equation and the momentum equations in fluid flow problems.
+            </p>
+            <p>
+                An image itself is not continuous either — it is made up of discrete pixels. Because of this, any image can be mapped onto a grid, where each pixel corresponds to a grid point, and the problem can then be solved on that grid.
+            </p>
+            <p>
+                But before that can happen, there has to be a way to properly map the pixels of an image onto a computational grid. So the first part of this project was to use an image-processing Python library called <span class="important-content">OpenCV</span>. The problem statement for this stage was simple: <span class="important-content">given an image, convert it into a matrix where each element behaves like a grid point in the computational domain</span>
+            </p>
+            <p>
+                Once this matrix is created, it can be passed directly into a fluid solver, which I call closeFOAM, and the actual simulation can begin. At that point, the governing equations can be solved on this grid just like in a standard CFD setup.
+            </p>
+            <p>
+                What I found really interesting about this idea is that a user could simply draw the initial condition on paper, scan or photograph it, and then map it into a matrix using the OpenCV pipeline. Each element of the matrix could represent something like the velocity at that point in the domain. The solver can then march the solution forward in time and produce the simulation results.
+            </p>
+            <p>
+                I also had this idea of mapping the final results back onto the same image. The experience would be somewhat similar to using a printer: you feed in a sheet of paper with the initial condition drawn on it, the system does all the computation internally, and then you get the same sheet back, but now with something like the steady-state solution printed on it.
+            </p>
+            <p>
+                While exploring related work, I came across papers discussing the use of augmented reality in computational fluid mechanics, which further motivated me to start and continue working on this project.
+            </p>
+            <p>
+                So next, I’ll first explain the algorithm and how I implemented it. After that, I’ll walk you through how to actually use the software, so you can explore the project yourself.
+            </p>
+            <p>
+                I’ve linked the code at the bottom of this webpage, so you’ll have everything you need before diving in.
+            </p>
+        </div>
+        <br><hr><br>
+        <div class="content-heading algorithm">
+            Algorithm
+        </div>
+        <div class="content">
+            Before we dive into the alogirhtm I would liek you to know that the solver is also capable to solve many other porblems like the Heat Eqaution, Laplace Equation, Wave Eqaution and the Navier strokes equation (Stream function voritcity formulation and primitive variable formultaion). But here we will only talk about the primitive varibale formulation, and not about other alogorithm. 
+        </div>
+        <br><hr><br>
+        <div class="content-heading usage">
+            Usage
+        </div>
+        <div class="content">
+            <p>
+                To explain how to use the solver, I’ll keep the process straightforward.
+                After running the source file using the command <code class="code">./solver.exe</code>, you will first be greeted with an animation, shown below.
+                <div class="image">
+                    <img src="./Images/Intro-animation (1).gif" style="border: 1px solid rgb(1, 255, 1);" alt="">
+                </div>
+            </p>
+            <p>
+                After the you will be asked to select one of the three options. And here is what each of them mean:<br>
+                <ul>
+                    
+                    <li>
+                        <div class="content-sub-heading">Version 1</div>
+                        <p>
+                            
+                            This is called <b>Version 1 (Toy Problem)</b>. In this version, you will find my initial ideas for what CloseFOAM is intended to be. It includes several well-known partial differential equations, such as the Heat Equation, Poisson’s Equation (and Laplace’s Equation), and the Wave Equation. There are a few other equations as well, but their solvers have not been implemented yet.
+                        </p>
+                        <p>
+                            I will not elaborate further on this part of the code, as it is not the objective of this project.
+                        </p>
+                    </li>
+                    <li>
+                        <div class="content-sub-heading">Version 2</div>
+                        <p>
+                            The second one is called <b>Version 2 (Stream Vorticity Formulation)</b>. This was my attempt to use the streamfunction–vorticity formulation to solve the problem.
+                        </p>
+                        <p>
+                            Although discussing this in detail is not the objective of this documentation, I will briefly outline the idea. The user provides inputs in terms of primitive variables. These are first converted into streamfunction and vorticity at each grid point. The algorithm then advances the solution forward in time using this formulation.
+                        </p>
+                        <p>
+                            From my experience, I found this approach particularly challenging to implement. Although this formulation reduces the number of unknowns, the boundary conditions must be derived explicitly, which proved difficult for two main reasons:
+                        </p>
+                        <ul>
+                            <li>
+                                The corners of the grid domain consistently introduced ambiguity. While traversing the grid points, the corner cells tended to accumulate significant errors due to changes in traversal direction and the inclusion of interior points when computing boundary values.
+                            </li>
+                            <li>
+                                The second challenge was the derivation of boundary conditions. The difficulty was not in deriving the streamfunction and vorticity boundary conditions for a specific problem, but in designing a generalized algorithm capable of determining appropriate streamfunction and vorticity boundary conditions for arbitrary velocity and pressure inputs at the boundaries.
+                            </li>
+                        </ul>
+                        
+                        <p>
+                            Here, you will find options such as <b>Custom Terminal Input</b>, which allows you to provide input through the terminal by entering the required parameters and matrices. This option was primarily created for testing the software.
+                        </p>
+                        <p>
+                            You can also test the solver using the “hello world” problem of CFD, namely the <b>lid-driven cavity problem</b>. Finally, there is an option called <b>File Input</b>, where you can provide a file—potentially generated using OpenCV from an image. However, this feature has not been implemented yet for this solver, as the solver itself is currently very unstable and the solution tends to diverge in most cases.
+                        </p>                        
+                    </li>
+                    <li>
+                        <div class="content-sub-heading">Version 3</div>
+
+                        <p>
+                            Lastly, you will find <b>Version 3 (Staggered Grid Formulation)</b>, which is the version explored in this documentation.
+                        </p>
+
+                        <p>
+                            This is where the staggered grid formulation is used, and we will examine how it works.
+                        </p>
+
+                        <p>
+                            I personally found this implementation to be much simpler compared to the streamfunction–vorticity formulation. Therefore, this is the part of the solver I intend to focus on and improve more than any other.
+                        </p>
+
+                        <p>
+                            The first input you will be asked to provide is the <span class="important-content">grid size</span> of the domain.
+                            <br>
+                            <img src="" alt="">
+                        </p>
+
+                        <p>
+                            Next, you will be asked to enter the <span class="important-content">time step</span>. This represents the number of divisions of the total simulation time. For example, if the total simulation time is 4 seconds and the time step is set to 100, the time domain will be divided into intervals of 0.04 seconds. The computation then advances the solution by 0.04 seconds for 100 steps.
+                            <br>
+                            <img src="" alt="">
+                        </p>
+
+                        <p>
+                            Now after entering that you will be asked to choose three ways to input the problem.So you can input the problem using <span class="important-content">test Problem</span>, which is again Cavity Driven Problem, <span class="important-content">Custom Input (Manual)</span>, whcih will allow you to type the input from the terminal, and finally you have the <span class="important-content">Custom Problem (Image)</span>, and this will allow you to input the data is the form of image.
+                        </p>
+                        <p>
+                            And now I am going to expain about each of the input process one by one.
+                        </p>
+                        <ul>
+                            <li>
+                                <div class="content-sub-sub-heading">Test Problem (Primitive Variable Formulation)</div>
+                        
+                                <p>
+                                    After selecting this option, you will be asked to enter the dimensions of the problem domain, for example, 1 m in the x-direction and 1 m in the y-direction. You will then be prompted to enter the total simulation time, such as 4 seconds.
+                                    <br>
+                                    <img src="" alt="">
+                                </p>
+                        
+                                <p>
+                                    Next, you will be asked to provide the characteristic length and characteristic velocity. These values are used to nondimensionalize the length and velocity variables.
+                                    <br>
+                                    <img src="" alt="">
+                                </p>
+                        
+                                <p>
+                                    You will then be asked to enter the dynamic viscosity. This value, along with the characteristic length and velocity, is used to calculate the Reynolds number.
+                                    <br>
+                                    <img src="" alt="">
+                                </p>
+                        
+                                <p>
+                                    Now comes the more critical part: you must enter the artificial viscosity. This parameter is important for the stability of the algorithm. I have not yet fully understood how to estimate the artificial viscosity for a specific problem. In this solver, this term is used in the pressure calculation through the continuity equation.
+                                </p>
+                        
+                                <p>
+                                    For all the values requested above, I have used those from 
+                                    <a href="https://youtu.be/yBpZn0fok6E?si=lRMkAM6axydH76Bn">this tutorial</a> by 
+                                    <a href="https://www.youtube.com/@TanmayAgrawal7">Tanmay Agrawal</a>, which provides an excellent explanation of the implementation of the MAC scheme for the lid-driven cavity problem.
+                                </p>
+                            </li>
+                        </ul>
+                        
+                    </li>
+                </ul>
+            </p>
+            
+        </div>
+    </div>
+   
+
+
+    <!--Footer-->
+    <div class="footer-container">
+        <div class="footer-image"><a target="_blank" href="https://github.com/arushraju/CloseFOAM"><img src="./github_logo.svg" alt=""></a></div>
+        <div class="footer-image"><a target="_blank" href=""><img src="./Arush_logo_white.PNG" alt=""></a></div>
+        <div class="footer-image"><a target="_blank" href="https://in.linkedin.com/in/arush-chinchkhede"><img src="./LinkedIn_Logo.png" alt=""></a></div>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+</html>
